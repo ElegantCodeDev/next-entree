@@ -1,87 +1,50 @@
-import "@/styles/globals.css"
+import React from 'react';
+import { ClerkProvider } from '@clerk/nextjs';
+import './globals.css';
+// eslint-disable-next-line camelcase
+import { Inter, Space_Grotesk } from 'next/font/google';
+import type { Metadata } from 'next';
+import { ThemeProvider } from '@/context/ThemeProvider';
 
-import type { Metadata, Viewport } from "next"
-import { Inter } from "next/font/google"
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter'
+});
 
-import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
-import { ThemeProvider } from "@/components/theme-provider"
-
-const inter = Inter({ subsets: ["latin"] })
-
-interface RootLayoutProps {
-  children: React.ReactNode
-}
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-space-grotesk'
+});
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url.base),
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: siteConfig.keywords,
-  authors: [
-    {
-      name: siteConfig.author,
-      url: siteConfig.url.author,
-    },
-  ],
-  creator: siteConfig.author,
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteConfig.url.base,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [siteConfig.ogImage],
-    creator: "@_rdev7",
-  },
+  title: 'DevFlow',
+  description: 'A community of developers sharing knowledge and ideas.',
   icons: {
-    icon: "/favicon.ico",
-  },
-}
+    icon: '/assets/images/site-logo.png'
+  }
+};
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
-}
-
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          "min-h-screen bg-background antialiased",
-          inter.className
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    <html lang="en">
+      <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
+        <ClerkProvider
+          appearance={{
+            elements: {
+              formButtonPrimary: 'primary-gradient',
+              footerActionLink: 'primary-text-gradient hover:text-primary-500'
+            }
+          }}
         >
-          {children}
-        </ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
-  )
+  );
 }
